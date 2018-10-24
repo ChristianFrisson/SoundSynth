@@ -13,12 +13,13 @@ NC='\033[0m'
 ################################################################
 
 # Parsing Arguments
-usage() { echo -e "${YELLOW}Usage: $0 <-n object_name> <-d density> <-i obj_id>[-A alpha=1e-7] [-B beta=5.0]${NC}" 1>&2; exit 1;}
+usage() { echo -e "${YELLOW}Usage: $0 <-n object_name> <-d density> <-u duration> <-i obj_id>[-A alpha=1e-7] [-B beta=5.0]${NC}" 1>&2; exit 1;}
 
-while getopts ":n:d:i:A:B:" opt; do
+while getopts ":n:d:u:i:A:B:" opt; do
     case $opt in
 		n) OBJNAME=$OPTARG;;
 		d) DENSITY=$OPTARG;;
+                u) DURATION=$OPTARG;;
 		i) OBJID=$OPTARG;;
         A) ALPHA=$OPTARG;;
 		B) BETA=$OPTARG;;
@@ -33,7 +34,7 @@ done
 echo -e "${GREEN}==>Generating Sound for Object ${OBJNAME}${NC}" #| tee -a "$LOGFILE"
 echo -e "Creating Config File for Sound Generation" #| tee -a "$LOGFILE"
 printf "[mesh]\n" > click_temp.ini
-printf "surface_mesh = ${OBJNAME}.obj\nvertex_mapping = adddd\n\n[audio]\nuse_audio_device = false\ndevice = \nTS = 1.0\namplitude = 2.0\ncontinuous = true\n\n[gui]\ngui=false\n\n[transfer]\nmoments = moments/moments.pbuf\n\n[modal]\nshape = ${OBJNAME}.ev\ndensity = ${DENSITY}\nalpha = ${ALPHA}\nbeta = ${BETA}\nvtx_map = ${OBJNAME}.vmap\n\n[camera]\nx = 0\ny = 0\nz = 1\n\n[collisions]\n" >> click_temp.ini
+printf "surface_mesh = ${OBJNAME}.obj\nvertex_mapping = adddd\n\n[audio]\nuse_audio_device = false\ndevice = \nTS = 1.0\namplitude = 2.0\ncontinuous = true\nduration = ${DURATION}\n\n[gui]\ngui=false\n\n[transfer]\nmoments = moments/moments.pbuf\n\n[modal]\nshape = ${OBJNAME}.ev\ndensity = ${DENSITY}\nalpha = ${ALPHA}\nbeta = ${BETA}\nvtx_map = ${OBJNAME}.vmap\n\n[camera]\nx = 0\ny = 0\nz = 1\n\n[collisions]\n" >> click_temp.ini
 cat click_temp.ini collision_output-${OBJID}.dat > click.ini
 rm click_temp.ini
 

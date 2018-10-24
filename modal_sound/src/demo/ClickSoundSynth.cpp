@@ -28,7 +28,6 @@
 // std::mutex write_buffer_lock;
 
 static const int SR = 44100;
-double duration = 3;
 
 using namespace std;
 
@@ -83,6 +82,7 @@ class ClickSoundViewer //: public QGLViewer
         QString             camXs;
         QString             camYs;
         QString             camZs;
+        double              duration;
 ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -96,7 +96,6 @@ class ClickSoundViewer //: public QGLViewer
 ClickSoundViewer::ClickSoundViewer(const char* inifile) //:
         //wireframe_(false), selTriId_(-1), audio_(NULL)
 {
-    cout<<"!!!!"<<endl;
 	QString iniPath(inifile);
     QFileInfo checkConfig(iniPath);
 
@@ -122,6 +121,8 @@ ClickSoundViewer::ClickSoundViewer(const char* inifile) //:
     audio_ = new AudioProducer(settings, dataDir_);
 
 ///////////////////////////////////////////////////////////////////////////////
+    duration = settings.value("audio/duration").toDouble();
+
     default_CamPos.x = settings.value("camera/x").toDouble();
     default_CamPos.y = settings.value("camera/y").toDouble();
     default_CamPos.z = settings.value("camera/z").toDouble();
@@ -466,7 +467,6 @@ void ClickSoundViewer::generate_continuous()
     //
     // audio_->generate_continuous_wav(buffer,whole_soundBuffer);
 
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -499,10 +499,9 @@ int main(int argc, char* argv[])
 
     cout<<"generating QApp and ClickSoundViewer\n";
     
-	QCoreApplication app(argc, argv);
-	cout<<argv[3]<<endl;
+    QCoreApplication app(argc, argv);
     ClickSoundViewer viewer(argv[3]);
-	cout<<"finished!\n"<<endl;
+    cout<<"QApp and ClickSoundViewer generated!"<<endl;
     //viewer.setWindowTitle(title.c_str());
 
 ////////////////////////////////////////////////////////////////////////
@@ -524,6 +523,7 @@ int main(int argc, char* argv[])
     }
     else
         viewer.generate_continuous();
+    cout << "ClickSound synthesis complete!" << endl;
 ////////////////////////////////////////////////////////////////////////
 
     //app.exit(0);

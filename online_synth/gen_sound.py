@@ -368,7 +368,7 @@ if __name__ == '__main__':
                                                           'mat-%d' % objs[obj_id].matId, 'obj-%d.ev' % objs[obj_id].objId) +
                                 ' %d.ev' % objs[obj_id].objId, shell=True)
 
-                print('sh %s' % os.path.join(ROOT, 'script', 'prepare_ini.sh') + ' -i %d ' % obj_id
+                print('bash %s' % os.path.join(ROOT, 'online_synth', 'prepare_ini.sh') + ' -i %d -u %f ' % (obj_id, duration)
                       + objs[obj_id].WriteShellCmd())
 
                 if is_overwrite and (len(glob.glob('*.wav')) > 0 or len(glob.glob('*.raw')) > 0 or len(glob.glob('../*.wav')) > 0):
@@ -382,7 +382,7 @@ if __name__ == '__main__':
                 if not os.path.exists('./../%04d.wav' % (obj_id)) or not os.path.exists('./../%04d.raw' % (obj_id)) or is_overwrite == True:
                     subprocess.call('rm -f *.wav', shell=True)
                     subprocess.call('rm -f *.raw', shell=True)
-                    subprocess.call('bash %s' % os.path.join(ROOT, 'online_synth', 'prepare_ini.sh') + ' -i %d ' % obj_id
+                    subprocess.call('bash %s' % os.path.join(ROOT, 'online_synth', 'prepare_ini.sh') + ' -i %d -u %f ' % (obj_id, duration)
                                     + objs[obj_id].WriteShellCmd(), shell=True)
                     if not os.path.exists('continuous_audio1.wav'):
                         subprocess.call('echo %d sound failed! > %d.txt' % (
