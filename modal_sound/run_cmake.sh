@@ -22,8 +22,8 @@
 # IOMP5
 # Iomp5_path=
 
-mkdir -p build_test
-cd build_test
+mkdir -p build
+cd build
 
 install_prefix=$(pwd)"/bin"
 cmake .. -DPROTOBUF_INCLUDE_DIR=$Protobuf_include_dir -DPROTOBUF_LITE_LIBRARY=$Protobuf_lite_lib -DBOOST_INCLUDEDIR=$Boost_include_dir -DBOOST_LIBRARYDIR=$Boost_lib_dir -DPROTOBUF_PROTOC_EXECUTABLE=$Protoc_exe_dir -DPROTOBUF_LIBRARY=$Protobuf_lib -DEIGEN_INCLUDE_DIR=$Eigen_include_dir -DGSL_INCLUDE_DIR=$Gsl_include -DMKL_LIB=$Mkl_lib -DIOMP5_PATH=$Iomp5_path -DCMAKE_INSTALL_PREFIX=$install_prefix

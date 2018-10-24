@@ -13,14 +13,14 @@ sudo apt-get install qt5-default qttools-dev-tools
 sudo apt-get install libgsl0-dev
 
 # install eigen
+mkdir -p external
 cd external
 if [ ! -d "./Eigen3" ]; then
-    echo 'installing protobuf from current build'
+    echo 'installing Eigen3'
     wget http://bitbucket.org/eigen/eigen/get/3.3.4.tar.gz -O Eigen3.3.4.tar.gz
     tar -xvf Eigen3.3.4.tar.gz
     rm Eigen3.3.4.tar.gz
     mv eigen* ./Eigen3
-    cd ..
 fi
 cd ..
 
