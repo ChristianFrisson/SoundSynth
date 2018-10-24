@@ -108,8 +108,8 @@ bpy.data.scenes["Scene"].render.engine="CYCLES"
 bpy.data.scenes['Scene'].render.resolution_x = 1600
 bpy.data.scenes['Scene'].render.resolution_y = 1200
 motion = dict()
-cfgPath = sys.argv[5]
-skip_factor = int(sys.argv[6])
+cfgPath = sys.argv[6]
+skip_factor = int(sys.argv[7])
 #cfgPath = '~/projects/sound/sound/result/scene-0/obj-0-0-1/mat-0-0-0/sim/blender_render.cfg'
 config=configparser.ConfigParser()
 config.read(cfgPath)

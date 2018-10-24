@@ -435,9 +435,11 @@ if __name__ == '__main__':
             blank = os.path.join(ROOT, 'online_synth/render', 'blank.blend')
             blenderScript = os.path.join(
                 ROOT, 'online_synth/render', 'blender_render_scene.py')
-            subprocess.call('%s %s --background --python %s %s %d' % (BLENDER, blank, blenderScript,
+            subprocess.call('%s %s --background --python %s -- %s %d' % (BLENDER, blank, blenderScript,
                                                                       os.path.join(simFilePath, 'blender_render.cfg'), skip_factor), shell=True)
             # subprocess.call('source ~/.bash_profile',shell = True)
+
+
     if skip_video != True:
         actobj_num = []
         for idx, obj in enumerate(objs):
