@@ -1,6 +1,7 @@
 import bpy
 import math
 import sys
+import tempfile
 import os
 import numpy as np
 import bmesh
@@ -311,6 +312,17 @@ XYZ_cache = dict()
 euler_cache = dict()
 time_stamp_cache = 0
 
+def renderNoOutput():
+    save_stdout = os.dup(1)
+    sys.stdout.flush()
+    os.close(1)
+    tempfile.mkstemp()
+
+    bpy.ops.render.render( write_still = True )
+
+    os.close(1)
+    os.dup(save_stdout)
+    os.close(save_stdout)
 
 for s in samples:
     time_stamp = ke[s]
@@ -321,8 +333,6 @@ for s in samples:
             current_obj = bpy.data.objects['mesh%d'%objid]
             current_obj.location = ordered_motion[time_stamp][objid]['center']
             euler = mathutils.Matrix(ordered_motion[time_stamp][objid]['rotation']).to_euler('XYZ')
-            #print('-----%d------'%objid)
-            #print(euler)
             current_obj.rotation_mode='XYZ'
             current_obj.rotation_euler = euler
 
@@ -330,13 +340,9 @@ for s in samples:
             if current_obj.location[0]!=XYZ_cache[objid][0] or current_obj.location[1]!=XYZ_cache[objid][1]\
             or current_obj.location[2]!=XYZ_cache[objid][2] :
                 flag=1
-                print(current_obj.location)
-                print(XYZ_cache[objid])
             if current_obj.rotation_euler[0]!=euler_cache[objid][0] or current_obj.rotation_euler[1]!=euler_cache[objid][1]\
             or current_obj.rotation_euler[2]!=euler_cache[objid][2]:
                 flag=1
-                print(current_obj.rotation_euler)
-                print(euler_cache[objid])
 
             ##update cache 
             XYZ_cache[objid] = copy.deepcopy(current_obj.location)
@@ -344,13 +350,11 @@ for s in samples:
 
         # cache misses, render scene
         if flag==1:
-            print("MISS!!!!")
             bpy.data.scenes['Scene'].render.filepath = outPath+'/%.5f.png'%time_stamp
-            bpy.ops.render.render( write_still = True )
+            renderNoOutput()
             time_stamp_cache = time_stamp
         #cache hits, copy prev:
         else:
-            print("HIT!!!!")
             prev = outPath+'/%.5f.png'%time_stamp_cache
             current = outPath+'/%.5f.png'%time_stamp
             subprocess.call('cp %s %s'%(prev,current),shell=True)
@@ -373,11 +377,4 @@ for s in samples:
             time_stamp_cache = time_stamp
 
         bpy.data.scenes['Scene'].render.filepath = outPath+'/%.5f.png'%time_stamp
-        bpy.ops.render.render( write_still = True )        
-
-
-
-
-
-
-    
+        renderNoOutput()

@@ -2,7 +2,7 @@
 RPOJECT_ROOT=/data/vision/billf/object-properties/sound/ztzhang/SoundSynth
 
 CLICKSYNTH=${PROJECT_ROOT}/modal_sound/build/bin/click_synth
-echo $CLICKSYNTH
+# echo $CLICKSYNTH
 set -e
 ######################## Color Settings ########################
 RED='\033[1;31m'
@@ -29,11 +29,9 @@ while getopts ":n:d:i:A:B:" opt; do
     esac
 done
 
-# Setting Directories
-echo ${OBJNAME}
-echo hello
 # Generating .ini File
-echo -e "${GREEN}==>Creating Config File for Sound Generation${NC}" #| tee -a "$LOGFILE"
+echo -e "${GREEN}==>Generating Sound for Object ${OBJNAME}${NC}" #| tee -a "$LOGFILE"
+echo -e "Creating Config File for Sound Generation" #| tee -a "$LOGFILE"
 printf "[mesh]\n" > click_temp.ini
 printf "surface_mesh = ${OBJNAME}.obj\nvertex_mapping = adddd\n\n[audio]\nuse_audio_device = false\ndevice = \nTS = 1.0\namplitude = 2.0\ncontinuous = true\n\n[gui]\ngui=false\n\n[transfer]\nmoments = moments/moments.pbuf\n\n[modal]\nshape = ${OBJNAME}.ev\ndensity = ${DENSITY}\nalpha = ${ALPHA}\nbeta = ${BETA}\nvtx_map = ${OBJNAME}.vmap\n\n[camera]\nx = 0\ny = 0\nz = 1\n\n[collisions]\n" >> click_temp.ini
 cat click_temp.ini collision_output-${OBJID}.dat > click.ini
@@ -42,8 +40,10 @@ rm click_temp.ini
 ################################################################
 
 # click_synth
-echo -e "${GREEN}==>Generating Continuous Audio (click_synth)${NC}" #| tee -a "$LOGFILE"
+echo -e "Generating Continuous Audio (click_synth)" #| tee -a "$LOGFILE"
 ${CLICKSYNTH} -platform offscreen click.ini #| tee -a "$LOGFILE"
+
+echo -e "${GREEN}==>Finished Generating Sound for Object ${OBJNAME}${NC}" #| tee -a "$LOGFILE"
 exit 0
 
 

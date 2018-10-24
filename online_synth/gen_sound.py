@@ -4,6 +4,7 @@ import sys
 import getopt
 import configparser as ConfigParser
 import os
+import glob
 import json
 import subprocess
 import math
@@ -224,6 +225,7 @@ if __name__ == '__main__':
             skip_sound = True
         elif k == '-r':
             skip_rendering = True
+            skip_video = True # Can't have video without remdering
         elif k == '-c':
             is_overwrite = False
         elif k == '-p':
@@ -320,8 +322,7 @@ if __name__ == '__main__':
     with cd(simFilePath):
         if skip_bullet is not True:
             for obj in objs:
-                print(
-                    "-------------------bullet--------%d-----------------------------" % obj.objId)
+                print("prepare_dat.sh: bullet object %d" % obj.objId)
                 if not os.path.exists('%d.obj' % obj.objId):
                     subprocess.call('ln -s %s' % os.path.join(ROOT, 'data/ready', '%d' % obj.objId, '%d.obj' % obj.objId)
                                     + ' %d.obj' % obj.objId, shell=True)
@@ -339,7 +340,7 @@ if __name__ == '__main__':
                 if(objs[obj_id].mass == 0):
                     continue
                 # print objs[obj_id].WriteShellCmd()
-                print("---------------------------%d-----------------------------" %
+                print("Sound generation: %d" %
                       objs[obj_id].objId)
                 if os.path.exists('%d.vmap' % objs[obj_id].objId):
                     subprocess.call('unlink %d.vmap' %
@@ -370,23 +371,17 @@ if __name__ == '__main__':
                 print('sh %s' % os.path.join(ROOT, 'script', 'prepare_ini.sh') + ' -i %d ' % obj_id
                       + objs[obj_id].WriteShellCmd())
 
-                if os.path.exists('../%04d.wav' % (obj_id)):
-                    print('WAV FOUND!')
-                if os.path.exists('../%04d.raw' % (obj_id)):
-                    print('RAW FOUND!')
-
-                if is_overwrite:
-                    print("OVERWRITE!!!")
-                    subprocess.call('rm *.wav', shell=True)
-                    subprocess.call('rm *.raw', shell=True)
+                if is_overwrite and (len(glob.glob('*.wav')) > 0 or len(glob.glob('*.raw')) > 0 or len(glob.glob('../*.wav')) > 0):
+                    print("Overwriting existing files!")
+                    subprocess.call('rm -f *.wav', shell=True)
+                    subprocess.call('rm -f *.raw', shell=True)
                     if os.path.exists('../%04d.wav' % (objs[obj_id].objId)):
                         subprocess.call('rm ../%04d.wav' %
                                         (obj_id), shell=True)
 
                 if not os.path.exists('./../%04d.wav' % (obj_id)) or not os.path.exists('./../%04d.raw' % (obj_id)) or is_overwrite == True:
-                    print('wav not generated yet, working on it !')
-                    subprocess.call('rm *.wav', shell=True)
-                    subprocess.call('rm *.raw', shell=True)
+                    subprocess.call('rm -f *.wav', shell=True)
+                    subprocess.call('rm -f *.raw', shell=True)
                     subprocess.call('bash %s' % os.path.join(ROOT, 'online_synth', 'prepare_ini.sh') + ' -i %d ' % obj_id
                                     + objs[obj_id].WriteShellCmd(), shell=True)
                     if not os.path.exists('continuous_audio1.wav'):
