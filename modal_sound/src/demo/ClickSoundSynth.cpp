@@ -403,8 +403,9 @@ void ClickSoundViewer::generate_continuous()
         double amp = Amps.at(i).toDouble()/16;
         double collision_time = times.at(i).toDouble();
 
-        if(collision_time > duration)
-            break;
+        if(collision_time > duration) {
+          break;
+        }
 
         const vector<Point3d>&  vtx = mesh_.vertices();
         const vector<Tuple3ui>& tgl = mesh_.surface_indices();
@@ -424,22 +425,18 @@ void ClickSoundViewer::generate_continuous()
         running_threads+=1;
 
         // if( i%NUM_THREADS == NUM_THREADS-1 || i==selected_Tris.size()-1){
-        if( (i==selTriIds.size()-1) || i%NUM_THREADS==NUM_THREADS-1  ){
+        if( (i==selTriIds.size()-1) || i%NUM_THREADS==NUM_THREADS-1){
             for(int nt =0; nt< running_threads; ++nt){
                 ts[nt].join();
             } 
             running_threads = 0;
         }
-//        audio_->single_channel_synthesis(mesh_.triangle_ids(selTriId), nml, CamPos, amp, index_t);
-        
-        //cout<<"======\n";
-
-//        for (int j=0; j < audio_->soundBuffer_[index_t].size(); ++j){
-//            whole_soundBuffer.at(SR*collision_time*audio_->format_.channelCount() + j) += audio_->soundBuffer_[index_t].at(j);
     }
 
-
-
+    // Join remaining threads in the event of a break
+    for (int nt=0; nt < running_threads; ++nt){
+      ts[nt].join();
+    }
 
 // new code with ch=1 starts from here
     std::vector<double> whole_soundBuffer_crop(&whole_soundBuffer[0],&whole_soundBuffer[SR*duration]);
