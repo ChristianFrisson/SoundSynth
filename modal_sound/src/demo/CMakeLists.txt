@@ -4,6 +4,9 @@ message("Protoc include path ${PROTOBUF_INCLUDE_DIR}")
 message("Protoc exe path ${PROTOBUF_PROTOC_EXECUTABLE}")
 message("Protoc lib path ${PROTOBUF_LIBRARIES}")
 
+# find pthread
+find_package(Threads)
+
 include_directories(
     ${GLUT_INCLUDE_DIR}
     ${OPENGL_INCLUDE_DIR}
@@ -40,11 +43,12 @@ add_exe(click_synth
     LINK_LIBRARIES  Qt5::Core   Qt5::Widgets
                     Qt5::Xml    Qt5::OpenGL
                     Qt5::Multimedia
-                    ${MKL_LIBS}
+                    ${MKL_LIBRARY}
                     iomp5
                     ${PROTOBUF_LIBRARY}
                     ${Boost_FILESYSTEM_LIBRARY}
                     ${Boost_SYSTEM_LIBRARY}
                     ${GSL_LIBRARIES}
+                    Threads::Threads
     OUT_DIR ${BIN_DIR}
 )
