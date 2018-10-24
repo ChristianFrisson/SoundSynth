@@ -6,6 +6,11 @@ include_directories(
     ${PROTOBUF_INCLUDE_DIRS})
 PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS sploosh.proto)
 
+set(SPLOOSH_INCLUDE_PATH ${CMAKE_CURRENT_BINARY_DIR} CACHE INTERNAL "Path to generated sploosh protobuf files")
+include_directories(${SPLOOSH_INCLUDE_PATH})
+set(SPLOOSH_SRCS ${PROTO_SRCS} CACHE INTERNAL "Generated sploosh source files")
+set(SPLOOSH_HDRS ${PROTO_HDRS} CACHE INTERNAL "Generated sploosh header files")
+
 # -----------------------------------------------------------------------------
 # generate python protobuf file
 set(PY_SRC "${BIN_DIR}/python/sploosh_pb2.py")

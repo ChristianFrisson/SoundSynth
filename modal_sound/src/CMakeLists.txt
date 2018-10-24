@@ -11,6 +11,9 @@ include_directories(
     ${MKL_INCLUDE_DIR})
 
 ###############################################################################
+
+add_subdirectory(protobuf)
+
 if ( BUILD_TOOLS )
     add_subdirectory(tools)
 endif ( BUILD_TOOLS )
@@ -23,5 +26,3 @@ if ( BUILD_DEMO )
   add_subdirectory(demo)
 
 endif ( BUILD_DEMO )
-
-add_subdirectory(protobuf)

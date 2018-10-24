@@ -7,7 +7,8 @@ message("Protoc lib path ${PROTOBUF_LIBRARIES}")
 include_directories(
     ${GLUT_INCLUDE_DIR}
     ${OPENGL_INCLUDE_DIR}
-    ${Boost_INCLUDE_DIR})
+    ${Boost_INCLUDE_DIR}
+    ${PROTOBUF_INCLUDE_DIRS})
 
 #if ( NOT QGLVIEWER_FRAMEWORK )
 #    include_directories({QGLVIEWER_INCLUDE_DIR})
@@ -17,10 +18,12 @@ include_directories(
 #  set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #  # Instruct CMake to run moc automatically when needed.
 #  set(CMAKE_AUTORCC ON)
-PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ../protobuf/sploosh.proto)
+# PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ../protobuf/sploosh.proto)
 # message("PROTO SRC: {PROTO_SRCS}")
 # message("PROTO HDR: {PROTO_HDRS}")
 # message("{PROTOBUF_LIBRARY}")
+
+SET_SOURCE_FILES_PROPERTIES(${SPLOOSH_HDRS} ${SPLOOSH_SRCS} PROPERTIES GENERATED TRUE)
 
 add_exe(click_synth
     ClickSoundSynth.cpp
@@ -33,7 +36,7 @@ add_exe(click_synth
     ../io/MatrixIO.cpp
     ../generic/precision_type.hpp
     ../generic/precision_type.cpp
-    ${PROTO_HDRS}   ${PROTO_SRCS}
+    ${SPLOOSH_HDRS}   ${SPLOOSH_SRCS}
     LINK_LIBRARIES  Qt5::Core   Qt5::Widgets
                     Qt5::Xml    Qt5::OpenGL
                     Qt5::Multimedia
